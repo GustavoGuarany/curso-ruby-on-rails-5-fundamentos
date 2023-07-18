@@ -23,22 +23,24 @@ Rails.application.routes.draw do
     root to: "produdos#index"
 end
 ```
-Novo endereço é localhost:3000, a ser atendido por produtos_controller, e assim o método index acionará a view de mesmo nome e as tabelas serão exibidas.
+Novo endereço é localhost:3000, a ser atendido por `produtos_controller`, e assim o método index acionará a `view` de mesmo nome e as tabelas serão exibidas.
 
 ### Controle
-Não basta só criar a rota, temos que criar o controler 
-Primeiramente acessaremos nosso projeto, e em seguida usaremos o comando *rails generate* para gerar um controller de Produtos.
+Não basta só criar a rota, temos que criar o `controler` 
+Primeiramente acessaremos nosso projeto, e em seguida usaremos o comando `rails generate` para gerar um controller de Produtos.
 
 ```console
 projeto$ rails generate controller Produtos
 ```
 
-No Visual Studio, veremos que a nova pasta produtos é criada dentro de app. Ainda, será criada a classe produtos_controller, localizada em "app > controllers". Essa classe herda algumas regras de ApplicationController
+No Visual Studio, veremos que a nova pasta produtos é criada dentro de `app`. Ainda, será criada a classe `produtos_controller`, localizada em `app > controllers`. Essa classe herda algumas regras de ApplicationController
 
 ### Criação do banco de dados
 
+```console
 projeto$ rails db:create
 Resposta: Database 'db/development.sqlite3' already exists
+```
 
 ### Gerando modelo 
 Em Ruby on Rails, um modelo representa uma tabela em seu banco de dados e é um lugar onde você pode definir métodos para interagir com os dados da tabela.
@@ -164,9 +166,10 @@ class ProdutosController < ApplicationController
 
 end
 ```
-Em index.hmtl.erb copiaremos a tabela inteira, e faremos uma segunda versão que será ordenada por preço que colocaremos abaixo. Usaremos a tag <h3> para marcar essa lista de produtos. Exibiremos, portanto, produtos_com_desconto em vez de apenas produtos.
 
-```console
+Em ´index.hmtl.erb´ copiaremos a tabela inteira, e faremos uma segunda versão que será ordenada por preço que colocaremos abaixo. Exibiremos, portanto, produtos_com_desconto em vez de apenas produtos.
+
+```html
 <h3>Produto com menor preço<h3>
     <table>
         <tr>
