@@ -12,33 +12,22 @@ cd loja
 rails server
 ```
 
-### De volta ao Visual Studio, clicaremos no diretório app - que armazenará todos os códigos referentes à aplicação - em seguida clicaremos com o botão direito sobre a pasta *views* e selecionaremos a opção "New File". Esse novo arquivo, por padrão, será chamado de index.html.
 
-Construindo uma tabela que conterá as colunas de Nome, Descrição, Preço e Quantidade.
+### Rotas da aplicação
+Por lidarmos com as rotas da aplicação, selecionaremos `config > routes.rb`:
+
+Construiremos uma rota nesse arquivo, primeiramente colocar root to, que apontará para produtos#index
+
 ```console
-<html>
-    <body>
-        <table>
-            <thread>
-                <tr>
-                    <td>Nome</td>
-                    <td>Descrição</td>
-                    <td>Preço</td>
-                    <td>Quantidade</td>
-                </tr>
-            </thead>
-        </table>
-    </body>
-</html>
+Rails.application.routes.draw do
+    root to: "produdos#index"
+end
 ```
-
-### Criando uma página de produtos e as rotas
-passo 1 - Criar uma rota 
-passo 2 - em config temos o arquivo routes.rb (Lugar onde conseguimos especificar quem atende aquela requisição)
+Novo endereço é localhost:3000, a ser atendido por produtos_controller, e assim o método index acionará a view de mesmo nome e as tabelas serão exibidas.
 
 ### Controle
 Não basta só criar a rota, temos que criar o controler 
-Primeiramente acessaremos nosso projeto, e em seguida usaremos o comando rails generate para gerar um controller de Produtos.
+Primeiramente acessaremos nosso projeto, e em seguida usaremos o comando *rails generate* para gerar um controller de Produtos.
 
 ```console
 projeto$ rails generate controller Produtos
@@ -140,18 +129,6 @@ class ProdutosController < ApplicationController
     end
 end
 ```
-
-### Rotas da aplicação
-Por lidarmos com as rotas da aplicação, selecionaremos "config > routes.rb":
-
-Construiremos uma rota nesse arquivo, primeiramente colocar root to, que apontará para produtos#index
-
-```console
-Rails.application.routes.draw do
-    root to: "produdos#index"
-end
-```
-Novo endereço é localhost:3000, a ser atendido por produtos_controller, e assim o método index acionará a view de mesmo nome e as tabelas serão exibidas.
 
 ### Trazer os produtos que temos da base de dados
 
