@@ -121,15 +121,12 @@ sqlite> select * from produtos;
 
 A criação de `produtos_controller.rb` permite a possibilidade de dialogar com a `view`, desde que chamemos uma função com o mesmo nome deste, portanto na controller invocaremos a função `index`. Dessa forma, antes da view `index` ser acessada, primeiramente passaremos por `produtos_controller.rb`, e dessa forma as configurações feitas serão aplicadas.
 
-A função `index` que criamos exibirá todos os produtos por `nome`. Criaremos uma variável `produtos` que precisará ser acessada dentro da `view`, e para isso inseriremos um `@`, o que a transformará em uma variável de instância.  As variáveis de instância são usadas para passar informações do controlador para a view.
+A função `index` que criamos exibirá todos os produtos por `nome`. Criaremos uma variável `produtos` que precisará ser acessada dentro da `view`, e para isso inseriremos um `@`, o que a transformará em uma variável de instância.  As variáveis de instância são usadas para passar informações do controlador para a view e o `.order` ordenando todos os produtos pelo nome e armazenando o resultado na variável de instância @produtos.
 
 ```console
 class ProdutosController < ApplicationController 
-
     def index
-#Ordenando todos os produtos pelo nome e armazenando o resultado na variável de instância @produtos
        @produtos = Produto.order : nome
-
     end
 end
 ```
@@ -140,11 +137,12 @@ end
 **Passo 2** - Em produto, ao invés de ele ser exibido diretamente no código HTML, incluiremos Ruby e substituiremos o produto que foi cadastrado por `produto.nome` e o mesmo valerá para os outros campos. Por fim, fecharemos o loop `each` utilizando `<% end %>`.<br><br>
 **Passo 3** - Percorrer cada produto em `@produtos` (a variável de instância definida na ação index do controlador). Para cada produto, cria uma nova linha na tabela HTML e preenche as células com o **nome, descrição, preço e quantidade do produto**.<br>
 
+`<% @produtos.each do |produto| %> ` Esta linha inicia um loop através de cada produto na coleção produtos da variael de instância @produtos. O bloco de código que se segue até encontrar o `<% end %>` será repetido para cada produto na coleção.`
+
 ```console
 <body>
     <tbody>
-        # Ordenando pelo nome 
-        <% @produtos.each do |produto| %> #Esta linha inicia um loop através de cada produto na coleção produtos da variael de instância @produtos. O bloco de código que se segue (até encontrar o <% end %>) será repetido para cada produto na coleção.
+        <% @produtos.each do |produto| %> 
             <tr>
                 <td><% produto.nome %></td> #Criando uma célula na tabela para cada produto. Imprime o valor da propriedade nome do produto atual.
                 <td><% produto.descricao %></td>
@@ -159,7 +157,7 @@ Em resumo, esse código percorre cada `produto` em `produtos` e, para cada um, c
 
 ### Trazendo produtos ordenados pelo preço e limitando para 1 produto
 
-Dialogando com a view através do controller
+Dialogando com a `view` através do `controller`
 
 ```console
 class ProdutosController < ApplicationController 
