@@ -108,6 +108,50 @@ sqlite> select * from produtos;
   -----  Camiseta azul  bonita      23.76      10         2018-09-17    2018-09-17 13:38:00.580094
 ```       
 
+### Local que armazene as reponsabilidade do projeto e poder manipular as regras de negócio
+
+A criação de produtos_controller.rb permite a possibilidade de dialogar com a view, desde que chamemos uma função com o mesmo nome deste, portanto na controller invocaremos a função index. Dessa forma, antes da view index ser acessada, primeiramente passaremos por produtos_controller.rb, e dessa forma as configurações feitas serão aplicadas.
+
+A função *index* que criamos exibirá todos os produtos por *nome*. Criaremos uma variável *produtos* que precisará ser acessada dentro da view, e para isso inseriremos um *@*, o que a transformará em uma variável de instância.  As variáveis de instância são usadas para passar informações do controlador para a view.
+
+```console
+class ProdutosController < ApplicationController 
+
+    def index
+#Ordenando todos os produtos pelo nome e armazenando o resultado na variável de instância @produtos
+       @produtos = Produto.order : nome
+
+    end
+end
+```
+
+### Trazer os produtos que temos da base de dados
+
+passo 1 - Embutir código Ruby na página HTML > index.html.erb 
+passo 2 - Trazer todos os produtos dentro da variável *todos*. Em seguida, por meio da variável, coletaremos produto por produto (each), e o chamaremos de forma individual de produto:
+
+```console
+<% todos = Produto.all %>
+<% todos.each do |produto| %>
+```
+passo 3 - em produto, ao invés de ele ser exibido diretamente no código HTML, incluiremos Ruby e substituiremos o produto que foi cadastrado por produto.nome e o mesmo valerá para os outros campos. Por fim, fecharemos o loop each utilizando <% end %>.
+
+```console
+# Percorre cada produto em @produtos (a variável de instância definida na ação index do controlador). Para cada produto, cria uma nova linha na tabela HTML e preenche as células com o nome, descrição, preço e quantidade do produto.
+
+<tbody>
+# Ordenando pelo nome 
+<% produto.each do |produto| %>
+    <tr>
+        <td><% produto.nome %></td>
+        <td><% produto.descricao %></td>
+        <td><% produto.preco %></td>
+        <td><% produto.quantidade %></td>
+    </tr>
+<% end %>
+</tbody>
+```
+
 
 
 
