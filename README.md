@@ -103,9 +103,9 @@ Ou
 ```console
 > camiseta = Produto.create nome:"Tenis", descricao:"Bom para corrida", preco:199, quantidade:3
 ```
-Produto é inserido na base de dados. Limpe a tela do terminal por meio do atalho ´Command + L´ e acionaremos o comando ´rails bdconsole´.
+Produto é inserido na base de dados. Limpe a tela do terminal por meio do atalho `Command + L` e acionaremos o comando `rails bdconsole`.
 
-Ao acessarmos o SQlite, utilizaremos dois comandos para que visualizemos o conteúdo em formato de tabela, sendo o primeiro ´.mode column´, e o segundo, ´.headers on´. Por fim, acionaremos o ´select * from produtos;´ para visualizar o conteúdo de produtos:
+Ao acessarmos o SQlite, utilizaremos dois comandos para que visualizemos o conteúdo em formato de tabela, sendo o primeiro `.mode column`, e o segundo, `.headers on`. Por fim, acionaremos o `select * from produtos;` para visualizar o conteúdo de produtos:
 
 ```console
 projeto$ rails dbconsole
@@ -119,9 +119,9 @@ sqlite> select * from produtos;
 
 ### Controller -> Local que armazene as reponsabilidade do projeto e poder manipular as regras de negócio
 
-A criação de ´produtos_controller.rb´ permite a possibilidade de dialogar com a ´view´, desde que chamemos uma função com o mesmo nome deste, portanto na controller invocaremos a função ´index´. Dessa forma, antes da view ´index´ ser acessada, primeiramente passaremos por ´produtos_controller.rb´, e dessa forma as configurações feitas serão aplicadas.
+A criação de `produtos_controller.rb` permite a possibilidade de dialogar com a `view`, desde que chamemos uma função com o mesmo nome deste, portanto na controller invocaremos a função `index`. Dessa forma, antes da view `index` ser acessada, primeiramente passaremos por `produtos_controller.rb`, e dessa forma as configurações feitas serão aplicadas.
 
-A função ´index´ que criamos exibirá todos os produtos por ´nome´. Criaremos uma variável ´produtos´ que precisará ser acessada dentro da ´view´, e para isso inseriremos um ´@´, o que a transformará em uma variável de instância.  As variáveis de instância são usadas para passar informações do controlador para a view.
+A função `index` que criamos exibirá todos os produtos por `nome`. Criaremos uma variável `produtos` que precisará ser acessada dentro da `view`, e para isso inseriremos um `@`, o que a transformará em uma variável de instância.  As variáveis de instância são usadas para passar informações do controlador para a view.
 
 ```console
 class ProdutosController < ApplicationController 
@@ -136,9 +136,9 @@ end
 
 ### Trazer os produtos que temos da base de dados
 
-passo 1 - Embutir código Ruby na página HTML > crie o arquivo ´index.html.erb´ em ´layouts > produtos´ <br>  
-passo 2 - Em produto, ao invés de ele ser exibido diretamente no código HTML, incluiremos Ruby e substituiremos o produto que foi cadastrado por ´produto.nome´ e o mesmo valerá para os outros campos. Por fim, fecharemos o loop ´each´ utilizando ´<% end %>´.<br>
-passo 3 - Percorrer cada produto em ´@produtos´ (a variável de instância definida na ação index do controlador). Para cada produto, cria uma nova linha na tabela HTML e preenche as células com o *nome, descrição, preço e quantidade do produto*.<br>
+passo 1 - Embutir código Ruby na página HTML > crie o arquivo `index.html.erb` em `layouts > produtos` <br>  
+passo 2 - Em produto, ao invés de ele ser exibido diretamente no código HTML, incluiremos Ruby e substituiremos o produto que foi cadastrado por `produto.nome` e o mesmo valerá para os outros campos. Por fim, fecharemos o loop `each` utilizando `<% end %>`.<br>
+passo 3 - Percorrer cada produto em `@produtos` (a variável de instância definida na ação index do controlador). Para cada produto, cria uma nova linha na tabela HTML e preenche as células com o **nome, descrição, preço e quantidade do produto**.<br>
 
 ```console
 <body>
@@ -155,7 +155,7 @@ passo 3 - Percorrer cada produto em ´@produtos´ (a variável de instância def
     </tbody>
 </body>
 ```
-Em resumo, esse código percorre cada ´produto´ em ´produtos´ e, para cada um, cria uma nova linha na tabela HTML e preenche as células com o ´nome, descrição, preço e quantidade´ do produto
+Em resumo, esse código percorre cada `produto` em `produtos` e, para cada um, cria uma nova linha na tabela HTML e preenche as células com o `nome, descrição, preço e quantidade` do produto
 
 ### Trazendo produtos ordenados pelo preço e limitando para 1 produto
 
@@ -172,7 +172,7 @@ class ProdutosController < ApplicationController
 end
 ```
 
-Em ´index.hmtl.erb´ copiaremos a tabela inteira, e faremos uma segunda versão que será ordenada por ´preço´ que colocaremos abaixo. Exibiremos, portanto, ´produtos com menor preco´ em vez de apenas ´produtos´.
+Em `index.hmtl.erb` copiaremos a tabela inteira, e faremos uma segunda versão que será ordenada por `preço` que colocaremos abaixo. Exibiremos, portanto, `produtos com menor preco` em vez de apenas `produtos`.
 
 ```console
 <h3>Produto com menor preço<h3>
@@ -198,9 +198,9 @@ Em ´index.hmtl.erb´ copiaremos a tabela inteira, e faremos uma segunda versão
 
 ### Bootstrap
 
-Acessaremos o link do ´Twitter Bootstrap Rails´, em que encontraremos uma breve documentação que nos orienta em como realizar a instalação. O primeiro passo é trazer a ´gem twitter-bootstrap-rails´ para o projeto.
+Acessaremos o link do `Twitter Bootstrap Rails`, em que encontraremos uma breve documentação que nos orienta em como realizar a instalação. O primeiro passo é trazer a `gem twitter-bootstrap-rails` para o projeto.
 
-Acessaremos o arquivo ´Gemfile´, que contém todas as bibliotecas que estamos utilizando, e criaremos a nova gem especificada.
+Acessaremos o arquivo `Gemfile`, que contém todas as bibliotecas que estamos utilizando, e criaremos a nova gem especificada.
 
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
@@ -220,26 +220,26 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 ```
-Não basta apenas escrevermos essa ´gem´ no arquivo, a própria documentação deixa isso claro, e solicita que depois executemos o comando ´bundle install´. Esse comando verificará se todas as dependências do projeto já estão presentes.
+Não basta apenas escrevermos essa `gem` no arquivo, a própria documentação deixa isso claro, e solicita que depois executemos o comando `bundle install`. Esse comando verificará se todas as dependências do projeto já estão presentes.
 
 No terminal, acessaremos o diretório loja e acionaremos o comando:
 
 ```console
 Projeto$ bundle install
 ```
-Por fim, a nova gem já está operante. Nós não precisamos estilizar o **Bootstrap**, podemos aproveitar o formato padrão. Usaremos o comando ´rails generate bootstrap: install static´ no terminal, e com isto alguns arquivos serão criados para que o framework possa ser utilizado no projeto.
+Por fim, a nova gem já está operante. Nós não precisamos estilizar o **Bootstrap**, podemos aproveitar o formato padrão. Usaremos o comando `rails generate bootstrap: install static` no terminal, e com isto alguns arquivos serão criados para que o framework possa ser utilizado no projeto.
 
 ```console
 Projeto$ rails generate bootstrap:install static
 ```
-Feito isso, ao acessarmos ´localhost:3000´ teremos uma mensagem de erro: ´Sprockets::FileNotFound in Produtos#index.´ 
-Algumas ´gems´ que utilizamos necessitam que recarreguemos o servidor. No terminal, utilizaremos o atalho ´Ctrl + C´ para interrompê-lo. Em seguida, subiremos novamente o servidor por meio do comando ´rails s´.
+Feito isso, ao acessarmos `localhost:3000` teremos uma mensagem de erro: `Sprockets::FileNotFound in Produtos#index.` 
+Algumas `gems` que utilizamos necessitam que recarreguemos o servidor. No terminal, utilizaremos o atalho `Ctrl + C` para interrompê-lo. Em seguida, subiremos novamente o servidor por meio do comando `rails s`.
 
 Já no navegador, atualizaremos a página e veremos que não há mais a mensagem de erro. Teremos algumas alterações nas tabelas, que ainda não são modificações estéticas satisfatórias.
 
 Existem duas classes do Bootstrap que podemos utilizar em nossas tabelas - você também pode pesquisar outros recursos na documentação desse framework, disponível em seu site oficial .
 
-Importaremos duas classes para o arquivo ´index.html.erb´, em ´<table>´, ´table table-bordered´ e ´table-hover´. Faremos o mesmo procedimento tanto para a tabela de **produtos** cadastrados quanto para a de **produtos com menor preco**.
+Importaremos duas classes para o arquivo `index.html.erb`, em `<table>`, `table table-bordered` e `table-hover`. Faremos o mesmo procedimento tanto para a tabela de **produtos** cadastrados quanto para a de **produtos com menor preco**.
 
 ```console
 <html>
@@ -257,7 +257,7 @@ Importaremos duas classes para o arquivo ´index.html.erb´, em ´<table>´, ´t
     </body>
 </html>
 ```
-Na documentação do Twitter Bootstrap, no tópico ´Navbar´, encontraremos uma barra de navegação chamada ´Brand name´
+Na documentação do `Twitter Bootstrap`, no tópico `Navbar`, encontraremos uma barra de navegação chamada `Brand name`
 
 ```console
 <%= nav_bar brand: "We're sooo web 1.0alizr", brand_link: account_daskboard_path %>
@@ -283,7 +283,7 @@ Em ´index.html.erb´, criaremos a ´navbar´ entre as tags ´<html>´ e ´<body
 
 ### Centralizar tabelas 
 
-Em ´index.html.erb´ Antes do corpo do HTML ´<body>´, criaremos uma ´<div>´, que receberá uma classe do Bootstrap chamada ´container´, lembrando que precisamos fechar essa ´<div>´ no final do código.
+Em `index.html.erb` Antes do corpo do HTML `<body>`, criaremos uma `<div>`, que receberá uma classe do Bootstrap chamada `container`, lembrando que precisamos fechar essa `<div>` no final do código.
 
 ```console
 <html>
@@ -302,7 +302,7 @@ Em ´index.html.erb´ Antes do corpo do HTML ´<body>´, criaremos uma ´<div>´
 # código omitido
 </html>
 ```
-Dar destaque na frase **Produtos com menor preço**. Incluiremos uma classe do Bootstrap associada a uma nova ´<div>´, a ´alert alert-success´, que receberá a função ´role="alert"´. Dentro das ´<h3>´ que envolvem a mensagem, incluiremos a segunda classe ´alert-heading´. Por fim, fecharemos a ´<div>´.
+Dar destaque na frase **Produtos com menor preço**. Incluiremos uma classe do Bootstrap associada a uma nova `<div>`, a `alert alert-success`, que receberá a função `role="alert"`. Dentro das `<h3>` que envolvem a mensagem, incluiremos a segunda classe `alert-heading`. Por fim, fecharemos a `<div>`.
 
 ```console
 <div class="alert alert-success" role="alert">
