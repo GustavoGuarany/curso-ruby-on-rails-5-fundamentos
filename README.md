@@ -200,7 +200,7 @@ Em `index.hmtl.erb` copiaremos a tabela inteira, e faremos uma segunda versão q
 
 Acessaremos o link do `Twitter Bootstrap Rails`, em que encontraremos uma breve documentação que nos orienta em como realizar a instalação. O primeiro passo é trazer a `gem twitter-bootstrap-rails` para o projeto.
 
-Acessaremos o arquivo `Gemfile`, que contém todas as bibliotecas que estamos utilizando, e criaremos a nova gem especificada incluindo `gem 'twitter-bootstrap-rails'` no arquivo Gemfile.
+Acessaremos o arquivo `Gemfile`, que contém todas as bibliotecas que estamos utilizando, e criaremos a nova gem especificada incluindo `gem 'twitter-bootstrap-rails'` e `gem 'jquery-rails'` no arquivo Gemfile.
 
 source 'https://rubygems.org'<br>
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
