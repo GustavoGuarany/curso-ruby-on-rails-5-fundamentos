@@ -136,9 +136,9 @@ end
 
 ### Trazer os produtos que temos da base de dados
 
-passo 1 - Embutir código Ruby na página HTML > crie o arquivo `index.html.erb` em `layouts > produtos` <br>  
-passo 2 - Em produto, ao invés de ele ser exibido diretamente no código HTML, incluiremos Ruby e substituiremos o produto que foi cadastrado por `produto.nome` e o mesmo valerá para os outros campos. Por fim, fecharemos o loop `each` utilizando `<% end %>`.<br>
-passo 3 - Percorrer cada produto em `@produtos` (a variável de instância definida na ação index do controlador). Para cada produto, cria uma nova linha na tabela HTML e preenche as células com o **nome, descrição, preço e quantidade do produto**.<br>
+**Passo 1** - Embutir código Ruby na página HTML > crie o arquivo `index.html.erb` em `layouts > produtos` <br>  
+**Passo 2** - Em produto, ao invés de ele ser exibido diretamente no código HTML, incluiremos Ruby e substituiremos o produto que foi cadastrado por `produto.nome` e o mesmo valerá para os outros campos. Por fim, fecharemos o loop `each` utilizando `<% end %>`.<br><br>
+**Passo 3** - Percorrer cada produto em `@produtos` (a variável de instância definida na ação index do controlador). Para cada produto, cria uma nova linha na tabela HTML e preenche as células com o **nome, descrição, preço e quantidade do produto**.<br>
 
 ```console
 <body>
@@ -200,9 +200,9 @@ Em `index.hmtl.erb` copiaremos a tabela inteira, e faremos uma segunda versão q
 
 Acessaremos o link do `Twitter Bootstrap Rails`, em que encontraremos uma breve documentação que nos orienta em como realizar a instalação. O primeiro passo é trazer a `gem twitter-bootstrap-rails` para o projeto.
 
-Acessaremos o arquivo `Gemfile`, que contém todas as bibliotecas que estamos utilizando, e criaremos a nova gem especificada.
+Acessaremos o arquivo `Gemfile`, que contém todas as bibliotecas que estamos utilizando, e criaremos a nova gem especificada incluindo `gem 'twitter-bootstrap-rails'` no arquivo Gemfile.
 
-source 'https://rubygems.org'
+source 'https://rubygems.org'<br>
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
 ```console
@@ -263,7 +263,7 @@ Na documentação do `Twitter Bootstrap`, no tópico `Navbar`, encontraremos uma
 <%= nav_bar brand: "We're sooo web 1.0alizr", brand_link: account_daskboard_path %>
 ```
 
-Em ´index.html.erb´, criaremos a ´navbar´ entre as tags ´<html>´ e ´<body>´. Daremos o nome da ´brand´ de ´Loja´, e o link apontado será ´root_url´, ou seja, a raiz do nosso projeto.
+Em `index.html.erb`, criaremos a `navbar` entre as tags `<html>` e `<body>`. Daremos o nome da `brand` de `Loja`, e o link apontado será `root_url`, ou seja, a raiz do nosso projeto.
 
 ```console
 <%= nav_bar brand: "Loja", brand_link: root_url %>
