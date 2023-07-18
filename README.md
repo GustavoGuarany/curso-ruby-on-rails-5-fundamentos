@@ -279,7 +279,7 @@ Em `index.html.erb`, criaremos a `navbar` entre as tags `<html>` e `<body>`. Dar
 </body>
 ```
 
-### Centralizar tabelas 
+### Menu de navegação e organizando as tabelas
 
 Em `index.html.erb` Antes do corpo do HTML `<body>`, criaremos uma `<div>`, que receberá uma classe do Bootstrap chamada `container`, lembrando que precisamos fechar essa `<div>` no final do código.
 
@@ -287,17 +287,19 @@ Em `index.html.erb` Antes do corpo do HTML `<body>`, criaremos uma `<div>`, que 
 <html>
     <%= nav_bar brand: "Loja", brand_link: root_url %>
     ´<div class="container">´
-    <body>
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <td>Nome</td>
-                    <td>Descricao</td>
-                    <td>Preço</td>
-                    <td>Quantidade</td>
-                </tr>
-            </thead>
-# código omitido
+        <body>
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <td>Nome</td>
+                        <td>Descricao</td>
+                        <td>Preço</td>
+                        <td>Quantidade</td>
+                    </tr>
+                </thead>
+        # código omitido
+        </body>    
+    </div>
 </html>
 ```
 Dar destaque na frase **Produtos com menor preço**. Incluiremos uma classe do Bootstrap associada a uma nova `<div>`, a `alert alert-success`, que receberá a função `role="alert"`. Dentro das `<h3>` que envolvem a mensagem, incluiremos a segunda classe `alert-heading`. Por fim, fecharemos a `<div>`.
@@ -307,5 +309,7 @@ Dar destaque na frase **Produtos com menor preço**. Incluiremos uma classe do B
     <h3 class="alert-heading">Produto com desconto</h3>
 </div>
 <table class="table table-bordered table-hover">
+#resto do código
 ```
+
 
