@@ -169,7 +169,7 @@ end
 
 Em ´index.hmtl.erb´ copiaremos a tabela inteira, e faremos uma segunda versão que será ordenada por preço que colocaremos abaixo. Exibiremos, portanto, produtos_com_desconto em vez de apenas produtos.
 
-```html
+```console
 <h3>Produto com menor preço<h3>
     <table>
         <tr>
@@ -193,9 +193,9 @@ Em ´index.hmtl.erb´ copiaremos a tabela inteira, e faremos uma segunda versão
 
 ### Bootstrap
 
-Acessaremos o link do Twitter Bootstrap Rails, em que encontraremos uma breve documentação que nos orienta em como realizar a instalação. O primeiro passo é trazer a gem twitter-bootstrap-rails para o projeto.
+Acessaremos o link do ´Twitter Bootstrap Rails´, em que encontraremos uma breve documentação que nos orienta em como realizar a instalação. O primeiro passo é trazer a ´gem twitter-bootstrap-rails´ para o projeto.
 
-Acessaremos o arquivo Gemfile, que contém todas as bibliotecas que estamos utilizando, e criaremos a nova gem especificada.
+Acessaremos o arquivo ´Gemfile´, que contém todas as bibliotecas que estamos utilizando, e criaremos a nova gem especificada.
 
 source 'https://rubygems.org'
 git_source(:github) { |repo| "https://github.com/#{repo}.git" }
@@ -215,20 +215,20 @@ gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
 gem 'uglifier', '>= 1.3.0'
 ```
-Não basta apenas escrevermos essa gem no arquivo, a própria documentação deixa isso claro, e solicita que depois executemos o comando bundle install. Esse comando verificará se todas as dependências do projeto já estão presentes.
+Não basta apenas escrevermos essa ´gem´ no arquivo, a própria documentação deixa isso claro, e solicita que depois executemos o comando ´bundle install´. Esse comando verificará se todas as dependências do projeto já estão presentes.
 
 No terminal, acessaremos o diretório loja e acionaremos o comando:
 
 ```console
 Projeto$ bundle install
 ```
-Por fim, a nova gem já está operante. Nós não precisamos estilizar o Bootstrap, podemos aproveitar o formato padrão. Usaremos o comando *rails generate bootstrap: install static* no terminal, e com isto alguns arquivos serão criados para que o framework possa ser utilizado no projeto.
+Por fim, a nova gem já está operante. Nós não precisamos estilizar o Bootstrap, podemos aproveitar o formato padrão. Usaremos o comando ´rails generate bootstrap: install static´ no terminal, e com isto alguns arquivos serão criados para que o framework possa ser utilizado no projeto.
 
 ```console
 Projeto$ rails generate bootstrap:install static
 ```
-Feito isso, ao acessarmos *localhost:3000* teremos uma mensagem de erro: *Sprockets::FileNotFound in Produtos#index.* 
-Algumas gems que utilizamos necessitam que recarreguemos o servidor. No terminal, utilizaremos o atalho "Ctrl + C" para interrompê-lo. Em seguida, subiremos novamente o servidor por meio do comando *rails s*.
+Feito isso, ao acessarmos ´localhost:3000´ teremos uma mensagem de erro: ´Sprockets::FileNotFound in Produtos#index.´ 
+Algumas gems que utilizamos necessitam que recarreguemos o servidor. No terminal, utilizaremos o atalho ´"Ctrl + C"´ para interrompê-lo. Em seguida, subiremos novamente o servidor por meio do comando ´rails s´.
 
 Já no navegador, atualizaremos a página e veremos que não há mais a mensagem de erro. Teremos algumas alterações nas tabelas, que ainda não são modificações estéticas satisfatórias.
 
@@ -252,12 +252,13 @@ Importaremos duas classes para o arquivo *index.html.erb*, em *<table>*, *table 
     </body>
 </html>
 ```
-Na documentação do Twitter Bootstrap, no tópico "Navbar", encontraremos uma barra de navegação chamada "Brand name"
+Na documentação do Twitter Bootstrap, no tópico ´Navbar´, encontraremos uma barra de navegação chamada ´Brand name´
 
 ```console
 <%= nav_bar brand: "We're sooo web 1.0alizr", brand_link: account_daskboard_path %>
 ```
-Em index.html.erb, criaremos a navbar entre as tags <html> e <body>. Daremos o nome da brand de Loja, e o link apontado será root_url, ou seja, a raiz do nosso projeto.
+
+Em ´index.html.erb´, criaremos a ´navbar´ entre as tags ´<html>´ e ´<body>´. Daremos o nome da ´brand´ de ´Loja´, e o link apontado será ´root_url´, ou seja, a raiz do nosso projeto.
 
 ```console
 <%= nav_bar brand: "Loja", brand_link: root_url %>
@@ -275,14 +276,14 @@ Em index.html.erb, criaremos a navbar entre as tags <html> e <body>. Daremos o n
 </body>
 ```
 
-Centralizar tabelas 
+### Centralizar tabelas 
 
-Antes do corpo do HTML (<body>), criaremos uma <div>, que receberá uma classe do Bootstrap chamada container, lembrando que precisamos fechar essa <div> no final do código.
+Antes do corpo do HTML ´<body>´, criaremos uma ´<div>´, que receberá uma classe do Bootstrap chamada ´container´, lembrando que precisamos fechar essa ´<div>´ no final do código.
 
 ```console
 <html>
     <%= nav_bar brand: "Loja", brand_link: root_url %>
-    <div class="container">
+    ´<div class="container">´
     <body>
         <table class="table table-bordered table-hover">
             <thead>
@@ -296,7 +297,7 @@ Antes do corpo do HTML (<body>), criaremos uma <div>, que receberá uma classe d
 # código omitido
 </html>
 ```
-Destaque na frase "Produtos com menor preço". Incluiremos uma classe do Bootstrap associada a uma nova <div>, a alert alert-success, que receberá a função role="alert". Dentro das <h3> que envolvem a mensagem, incluiremos a segunda classe alert-heading. Por fim, fecharemos a <div>.
+Dar destaque na frase "Produtos com menor preço". Incluiremos uma classe do Bootstrap associada a uma nova ´<div>´, a ´alert alert-success´, que receberá a função ´role="alert"´. Dentro das ´<h3>´ que envolvem a mensagem, incluiremos a segunda classe ´alert-heading´. Por fim, fecharemos a ´<div>´.
 
 ```console
 <div class="alert alert-success" role="alert">
