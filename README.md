@@ -12,28 +12,170 @@ cd loja
 rails server
 ```
 
+### Bootstrap
+
+Acessaremos o link do `Twitter Bootstrap Rails`, em que encontraremos uma breve documentação que nos orienta em como realizar a instalação. O primeiro passo é trazer a `gem twitter-bootstrap-rails` para o projeto.
+
+Acessaremos o arquivo `Gemfile`, que contém todas as bibliotecas que estamos utilizando, e criaremos a nova gem especificada incluindo `gem 'twitter-bootstrap-rails'` e `gem 'jquery-rails'` no arquivo Gemfile.
+
+source 'https://rubygems.org'<br>
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+
+```console
+ruby '2.5.1'
+
+gem 'twitter-bootstrap-rails'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 5.2.1'
+# Use sqlite3 as the database for Active Record
+gem 'sqlite3'
+# Use Puma as the app server
+gem 'puma', '~> 3.11'
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 5.0'
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier', '>= 1.3.0'
+```
+Não basta apenas escrevermos essa `gem` no arquivo, a própria documentação deixa isso claro, e solicita que depois executemos o comando `bundle install`. Esse comando verificará se todas as dependências do projeto já estão presentes.
+
+No terminal, acessaremos o diretório loja e acionaremos o comando:
+
+```console
+Projeto$ bundle install
+```
+Por fim, a nova gem já está operante. Nós não precisamos estilizar o **Bootstrap**, podemos aproveitar o formato padrão. Usaremos o comando `rails generate bootstrap: install static` no terminal, e com isto alguns arquivos serão criados para que o framework possa ser utilizado no projeto.
+
+```console
+Projeto$ rails generate bootstrap:install static
+```
+Feito isso, ao acessarmos `localhost:3000` teremos uma mensagem de erro: `Sprockets::FileNotFound in Produtos#index.` 
+Algumas `gems` que utilizamos necessitam que recarreguemos o servidor. No terminal, utilizaremos o atalho `Ctrl + C` para interrompê-lo. Em seguida, subiremos novamente o servidor por meio do comando `rails s`.
+
+Já no navegador, atualizaremos a página e veremos que não há mais a mensagem de erro. Teremos algumas alterações nas tabelas, que ainda não são modificações estéticas satisfatórias.
+
+Existem duas classes do Bootstrap que podemos utilizar em nossas tabelas - você também pode pesquisar outros recursos na documentação desse framework, disponível em seu site oficial .
 
 ### Rotas da aplicação
 Por lidarmos com as rotas da aplicação, selecionaremos `config > routes.rb`:
 
-Construiremos uma rota nesse arquivo, primeiramente colocar root to, que apontará para produtos#index
+linha 1 - `get "produtos/busca", to: "produtos#busca", as: :busca_produto` Esta linha define uma rota `GET` para a URL `produtos/busca`. Quando uma requisição `GET` é enviada para esta `URL`, a aplicação Rails direciona a requisição para a ação `busca` no controlador de produtos `"produtos#busca"`. A opção `as: :busca_produto` define um nome para a rota, o que pode ser usado para gerar o URL correspondente em qualquer parte da aplicação.
+
+linha 2 - `resources :produtos, only: [:new, :create, :destroy]` Esta linha é uma forma abreviada para definir várias rotas relacionadas a recursos de `produtos` de uma só vez. A palavra `resources` é uma função especial no Rails que cria várias rotas padrão `RESTful` para um recurso específico (neste caso, "produtos"). O parâmetro `only: [:new, :create, :destroy]` limita as rotas criadas apenas para as ações `"new", "create" e "destroy"` para o controlador de produtos. Isto significa que as seguintes rotas são criadas:
+
+`GET /produtos/new` (rotas para a ação `new` no controlador de produtos, usada para retornar um formulário para criar um `novo produto`),
+`POST /produtos` (rotas para a ação `create` no controlador de produtos, usada para criar um `novo produto`),
+`DELETE /produtos/:id` (rotas para a ação `destroy` no controlador de produtos, usada para `deletar um produto`).
+
+linha 3 - root to: "produtos#index": Esta linha define a rota "root" da aplicação, que é a URL que é acessada quando você visita o domínio base da aplicação (por exemplo, www.example.com). Neste caso, a rota "root" está sendo roteada para a ação "index" no controlador de produtos, que geralmente é usado para exibir uma lista de todos os produtos.
 
 ```console
 Rails.application.routes.draw do
-    root to: "produdos#index"
+  get "produtos/busca", to: "produtos#busca", as: :busca_produto
+  resources :produtos, only: [:new, :create, :destroy]
+  root to: "produtos#index"
 end
 ```
-Novo endereço é localhost:3000, a ser atendido por `produtos_controller`, e assim o método index acionará a `view` de mesmo nome e as tabelas serão exibidas.
+
 
 ### Controle
+
 Não basta só criar a rota, temos que criar o `controler` 
 Primeiramente acessaremos nosso projeto, e em seguida usaremos o comando `rails generate` para gerar um controller de Produtos.
+
+A criação de `produtos_controller.rb` permite a possibilidade de dialogar com a `view`, desde que chamemos uma função com o mesmo nome deste, portanto na controller invocaremos a função `index`. Dessa forma, antes da view `index` ser acessada, primeiramente passaremos por `produtos_controller.rb`, e dessa forma as configurações feitas serão aplicadas.
 
 ```console
 projeto$ rails generate controller Produtos
 ```
 
 No Visual Studio, veremos que a nova pasta produtos é criada dentro de `app`. Ainda, será criada a classe `produtos_controller`, localizada em `app > controllers`. Essa classe herda algumas regras de ApplicationController
+
+Em produtos_controle colocaremos os códigos a seguir
+
+```console
+  def index
+    @produtos = Produto.order :nome
+    @produto_com_desconto = Produto.order(:preco).limit 1
+    @baixo_estoque = Produto.where("quantidade < 4").order(:quantidade)
+  end
+
+  def create 
+    produto = params.require(:produto).permit(:nome, :descricao, :preco, :quantidade)
+    Produto.create produto
+    redirect_to root_url
+    
+  end
+
+  def destroy
+    id = params[:id]
+    Produto.destroy id
+    redirect_to root_url
+  end
+
+  def busca
+      @nome = params[:nome]
+      @produtos = Produto.where "nome like ?", "%#{@nome}%"
+  end
+end
+```
+
+`def index`: Este é o início da definição de um método chamado "index". Em um controlador Rails, os métodos correspondem a "ações" que podem ser realizadas na aplicação.
+
+`@produtos = Produto.order :nome` Aqui estamos atribuindo à variável de instância @produtos uma lista de todos os produtos, ordenados pelo campo nome.
+
+`@produto_com_desconto = Produto.order(:preco).limit 1` Aqui estamos buscando o produto com o menor preço e atribuindo-o à variável de instância `@produto_com_desconto`.
+
+`@baixo_estoque = Produto.where("quantidade < 4").order(:quantidade)` Aqui estamos buscando todos os produtos que têm quantidade menor que 4 e ordenando-os por quantidade. O resultado é atribuído à variável @baixo_estoque.
+ 
+### Renderizar os elementos HTML comuns em todas as páginas com application.html.erb
+
+Abra views > layouts > application.html.erb  : O application.html.erb é um arquivo de layout padrão no Ruby on Rails. Esse arquivo é responsável por renderizar os elementos HTML comuns em todas as páginas do seu aplicativo, como cabeçalho, rodapé, barra de navegação etc.
+
+```console
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AppFirst</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <%= nav_bar brand: "Loja Guga", brand_link: root_url do %>
+      <%= menu_group do %>
+        <%= menu_item "Criar novo produto", new_produto_path %>
+    <% end %>
+    
+    <%= form_tag busca_produto_path, method: :get, class:"navbar-form" do %>
+    <div class="form-group">
+      <%= text_field_tag :nome, @nome, class:"form-control" %>
+      <%= button_to "Buscar", nil, class:"btn btn-default" %> 
+    </div>
+    <% end %>
+    <% end %>
+
+  <div class="container">
+    <%= yield %>
+    </div>
+  </body>
+</html>
+```
+`<title>AppFirst</title>`: Define o título da página como "AppFirst".
+`<meta name="viewport" content="width=device-width,initial-scale=1">` : Define as configurações de `viewport` para a página, o que é importante para o design responsivo.
+`<%= csrf_meta_tags %>`: Isso gera tags de metadados para proteção contra falsificação de solicitação entre sites (CSRF).
+`<%= csp_meta_tag %>`: Isso gera uma tag de metadados para a Política de Segurança de Conteúdo (CSP).
+`<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>`: Isso gera um link para o arquivo de folha de estilo CSS `application` e configura-o para ser recarregado se mudar.
+`<%= javascript_importmap_tags %>`: Isso gera tags de script para importação de módulos `JavaScript`.
+`<%= nav_bar brand: "Loja", brand_link: root_url do %>`: Isso cria uma barra de navegação com o nome da marca `Loja` e um link para a URL raiz do aplicativo.
+`<%= menu_group do %> e <%= menu_item "Criar novo produto", new_produto_path %>`: Criam um grupo de itens de menu com um item `Criar novo produto` que leva ao caminho `new_produto_path`.
+`<%= form_tag busca_produto_path, method: :get, class:"navbar-form" do %>`: Cria um formulário que, quando enviado, fará uma solicitação `GET` para `busca_produto_path`. O formulário tem a classe CSS `navbar-form`.
+`<%= text_field_tag :nome, @nome, class:"form-control" %>`: Isso cria um campo de texto com o nome `nome`, o valor `@nome`, e a classe CSS `form-control`.
+`<%= button_to "Buscar", nil, class:"btn btn-default" %>`: Isso cria um botão com o rótulo `Buscar` e a classe CSS `btn btn-default`.
+`<div class="container">`: Cria uma div com a classe CSS `container`.
 
 ### Criação do banco de dados
 
@@ -117,355 +259,158 @@ sqlite> select * from produtos;
   -----  Camiseta azul  bonita      23.76      10         2018-09-17    2018-09-17 13:38:00.580094
 ```       
 
-### Controller -> Local que armazene as reponsabilidade do projeto e poder manipular as regras de negócio
 
-A criação de `produtos_controller.rb` permite a possibilidade de dialogar com a `view`, desde que chamemos uma função com o mesmo nome deste, portanto na controller invocaremos a função `index`. Dessa forma, antes da view `index` ser acessada, primeiramente passaremos por `produtos_controller.rb`, e dessa forma as configurações feitas serão aplicadas.
+### Criação da view que corresponde à ação index do controller `ProdutosController`
 
-A função `index` que criamos exibirá todos os produtos por `nome`. Criaremos uma variável `produtos` que precisará ser acessada dentro da `view`, e para isso inseriremos um `@`, o que a transformará em uma variável de instância.  As variáveis de instância são usadas para passar informações do controlador para a view e o `.order` ordenando todos os produtos pelo nome e armazenando o resultado na variável de instância @produtos.
+Dentro de uma aplicação Rails, a convenção é ter um arquivo de `view` correspondente para cada ação definida em um `controller`. Nesse caso, quando a ação index do `ProdutosController` é acionada, o Rails vai renderizar a view `index.html.erb` por padrão.
 
-```console
-class ProdutosController < ApplicationController 
-    def index
-       @produtos = Produto.order : nome
-    end
-end
-```
-
-### Trazer os produtos que temos da base de dados
-
-**Passo 1** - Embutir código Ruby na página HTML > crie o arquivo `index.html.erb` em `layouts > produtos` <br>  
-**Passo 2** - Em produto, ao invés de ele ser exibido diretamente no código HTML, incluiremos Ruby e substituiremos o produto que foi cadastrado por `produto.nome` e o mesmo valerá para os outros campos. Por fim, fecharemos o loop `each` utilizando `<% end %>`.<br><br>
-**Passo 3** - Percorrer cada produto em `@produtos` (a variável de instância definida na ação index do controlador). Para cada produto, cria uma nova linha na tabela HTML e preenche as células com o **nome, descrição, preço e quantidade do produto**.<br>
-
-`<% @produtos.each do |produto| %> ` Esta linha inicia um loop através de cada produto na coleção produtos da variael de instância @produtos. O bloco de código que se segue até encontrar o `<% end %>` será repetido para cada produto na coleção.`
+Por exemplo, se o método index do `ProdutosController` define uma variável `@produtos` que contém uma lista de produtos, você pode usar ERB no arquivo index.html.erb para iterar sobre essa lista e gerar HTML para cada produto.
 
 ```console
-<body>
-    <tbody>
-        <% @produtos.each do |produto| %> 
-            <tr>
-                <td><% produto.nome %></td> #Criando uma célula na tabela para cada produto. Imprime o valor da propriedade nome do produto atual.
-                <td><% produto.descricao %></td>
-                <td><% produto.preco %></td>
-                <td><% produto.quantidade %></td>
-            </tr>
-        <% end %>
-    </tbody>
-</body>
-```
-Em resumo, esse código percorre cada `produto` em `produtos` e, para cada um, cria uma nova linha na tabela HTML e preenche as células com o `nome, descrição, preço e quantidade` do produto
-
-### Trazendo produtos ordenados pelo preço e limitando para 1 produto
-
-Dialogando com a `view` através do `controller`
-
-```console
-class ProdutosController < ApplicationController 
-
-    def index
-        @produtos = Produto.order : nome
-        @produto_com_menor_preco = Produto.order(:preco).limit 1
-    end
-
-end
-```
-
-Em `index.hmtl.erb` copiaremos a tabela inteira, e faremos uma segunda versão que será ordenada por `preço` que colocaremos abaixo. Exibiremos, portanto, `produtos com menor preco` em vez de apenas `produtos`.
-
-```console
-<h3>Produto com menor preço<h3>
-    <table>
+    <table  class="table table-bordered table-hover">
+      <thead>
         <tr>
-            <td>Nome<td/>
-            <td>Descrição</td>
-            <td>Preço</td>
-            <td>Quantidade</td>
+          <td>Nome</td>
+          <td>Descrição</td>
+          <td>Preço</td>
+          <td>Quantidade</td>
+          <td colspan="1">
+          
         </tr>
-    </thead>
-<tbody>
-<% @produtos_com_menor_preco.each do |produto| %>
-    <tr>
-        <td><%= produto.nome %></td
-        <td><%= produto.descricao %></td>
-        <td><%= produto.preco %></td>
-        <td><%= produto.quantidade %></td>
-    </tr>
-# código omitido
+      </thead>
+      <tbody> 
+      <% @produtos.each do |produto| %>
+        <tr>
+          <td><%= produto.nome %> </td>
+          <td><%= produto.descricao %></td>
+          <td><%= produto.preco %></td>
+          <td><%= produto.quantidade %></td> 
+          <td><%= button_to "Remover", produto, method: :delete, class:"btn btn-danger", data:{confirm: "Tem certeza que deseja remover o produto #{produto.nome}?"} %> 
+          
+          </td>   
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <div class="alert alert-success" role="alert">
+        <h3 class="alert-heading">Produto com desconto</h3>
+    </div>  
+    <table class="table table-bordered table-hover" >
+      <thead>
+        <tr>
+          <td>Nome</td>
+          <td>Descrição</td>
+          <td>Preço</td>
+          <td>Quantidade</td>
+        </tr>
+      </thead>
+      <tbody>
+      <% @produto_com_desconto.each do |produto| %>
+        <tr>
+          <td><%= produto.nome %> </td>
+          <td><%= produto.descricao %></td>
+          <td><%= produto.preco %></td>
+          <td><%= produto.quantidade %></td> 
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+    </table>
+    <div class="alert alert-success" role="alert">
+        <h3 class="alert-heading">Produtos com estoque baixo</h3>
+    </div>  
+    <table class="table table-bordered table-hover" >
+      <thead>
+        <tr>
+          <td>Nome</td>
+          <td>Descrição</td>
+          <td>Preço</td>
+          <td>Quantidade</td>
+        </tr>
+      </thead>
+      <tbody>
+      <% @baixo_estoque.each do |produto| %>
+        <tr>
+          <td><%= produto.nome %> </td>
+          <td><%= produto.descricao %></td>
+          <td><%= produto.preco %></td>
+          <td><%= produto.quantidade %></td> 
+        </tr>
+        <% end %>
+      </tbody>
     </table>
 ```
 
-### Bootstrap
+`<table class="table table-bordered table-hover">`: Cria uma tabela HTML com as classes CSS 'table', 'table-bordered' e 'table-hover'. Estas classes são usadas para estilizar a tabela.
 
-Acessaremos o link do `Twitter Bootstrap Rails`, em que encontraremos uma breve documentação que nos orienta em como realizar a instalação. O primeiro passo é trazer a `gem twitter-bootstrap-rails` para o projeto.
+`<% @produtos.each do |produto| %>`: Este é um loop em Ruby que itera sobre cada `produto` na variável de instância `@produtos`. Para cada `produto`, ele vai renderizar um conjunto de células da tabela `<td>` contendo o `nome, descrição, preço e quantidade do produto.`
 
-Acessaremos o arquivo `Gemfile`, que contém todas as bibliotecas que estamos utilizando, e criaremos a nova gem especificada incluindo `gem 'twitter-bootstrap-rails'` e `gem 'jquery-rails'` no arquivo Gemfile.
+`<%= produto.nome %>`: Este código ERB vai imprimir o nome do produto na célula da tabela.
 
-source 'https://rubygems.org'<br>
-git_source(:github) { |repo| "https://github.com/#{repo}.git" }
+`<%= button_to "Remover", produto, method: :delete, class:"btn btn-danger", data:{confirm: "Tem certeza que deseja remover o produto #{produto.nome}?"} %>`: Cria um botão que, quando clicado, enviará uma solicitação de `DELETE` para o servidor, solicitando a remoção do produto. Antes de enviar a solicitação, será exibido um diálogo de confirmação com a mensagem "Tem certeza que deseja remover o produto #{produto.nome}?".
 
-```console
-ruby '2.5.1'
+`<div class="alert alert-success" role="alert"> e <h3 class="alert-heading">Produto com desconto</h3>`: Essas linhas de código criam um cabeçalho indicando que o próximo produto será um produto com desconto.
 
-gem 'twitter-bootstrap-rails'
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '~> 5.2.1'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
-# Use Puma as the app server
-gem 'puma', '~> 3.11'
-# Use SCSS for stylesheets
-gem 'sass-rails', '~> 5.0'
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-```
-Não basta apenas escrevermos essa `gem` no arquivo, a própria documentação deixa isso claro, e solicita que depois executemos o comando `bundle install`. Esse comando verificará se todas as dependências do projeto já estão presentes.
+`<% @produto_com_desconto.each do |produto| %>`: Este é um loop que itera sobre a variável de instância '@produto_com_desconto'. Para cada produto, ele renderiza um conjunto de células da tabela com o nome, descrição, preço e quantidade do produto.
 
-No terminal, acessaremos o diretório loja e acionaremos o comando:
+O último bloco é semelhante aos blocos anteriores, mas itera sobre a variável de instância `@baixo_estoque`, que contém os produtos com estoque baixo. Para cada produto, ele renderiza um conjunto de células da tabela com o `nome, descrição, preço e quantidade do produto`.
+
+### Novo Produto
+
+Criando um novo formulário HTML de novo produto para a entidade produto. O arquivo new.html.erb dentro de view > produtos 
+
+Será utilizado para renderizar a view correspondente à ação `new` do controller, onde é exibida a página de criação de um novo recurso, neste caso, um `Novo Produto`.
 
 ```console
-Projeto$ bundle install
-```
-Por fim, a nova gem já está operante. Nós não precisamos estilizar o **Bootstrap**, podemos aproveitar o formato padrão. Usaremos o comando `rails generate bootstrap: install static` no terminal, e com isto alguns arquivos serão criados para que o framework possa ser utilizado no projeto.
+<%= form_for Produto.new do |form| %>
+        <div class="row">
+          <div class="col-sm-8">
+              <div class="form-group">
+                <%= form.label :nome %> 
+                <%= form.text_field :nome, class:"form-control"%>
+            </div>
+          </div>
+        </div>
 
-```console
-Projeto$ rails generate bootstrap:install static
-```
-Feito isso, ao acessarmos `localhost:3000` teremos uma mensagem de erro: `Sprockets::FileNotFound in Produtos#index.` 
-Algumas `gems` que utilizamos necessitam que recarreguemos o servidor. No terminal, utilizaremos o atalho `Ctrl + C` para interrompê-lo. Em seguida, subiremos novamente o servidor por meio do comando `rails s`.
+        <div class="row">
+          <div class="col-sm-8">
+            <div class="form-group">
+              <%= form.label :descricao %>
+              <%=form.text_area :descricao, class:"form-control", rows:5 %>
+            </div>
+          </div>
+        </div>
 
-Já no navegador, atualizaremos a página e veremos que não há mais a mensagem de erro. Teremos algumas alterações nas tabelas, que ainda não são modificações estéticas satisfatórias.
+        
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="form-group">
+            <%= form.label :preco %>
+            <%=form.number_field :preco, step:0.01, class:"form-control"%>
+            </div>
+          </div>
+        </div>
 
-Existem duas classes do Bootstrap que podemos utilizar em nossas tabelas - você também pode pesquisar outros recursos na documentação desse framework, disponível em seu site oficial .
+        <div class="row">
+          <div class="col-sm-2">
+            <div class="form-group">
+            <%= form.label :quantidade %>
+            <%=form.number_field :quantidade, class:"form-control"%>
+            </div>
+          </div>
+        </div>
 
-Importaremos duas classes para o arquivo `index.html.erb`, em `<table>`, `table table-bordered` e `table-hover`. Faremos o mesmo procedimento tanto para a tabela de **produtos** cadastrados quanto para a de **produtos com menor preco**.
+        <%= form.submit "Criar", class:"btn btn-primary"%>
 
-```console
-<html>
-    <body>
-        <table class="table table-bordered table-hover">
-            <thead>
-                <tr>
-                    <td>Nome</td>
-                    <td>Descricao</td>
-                    <td>Preço</td>
-                    <td>Quantidade</td>
-                </tr>
-            </thead>
-# código omitido
-    </body>
-</html>
-```
-Na documentação do `Twitter Bootstrap`, no tópico `Navbar`, encontraremos uma barra de navegação chamada `Brand name`
-
-```console
-<%= nav_bar brand: "We're sooo web 1.0alizr", brand_link: account_daskboard_path %>
-```
-
-Em `index.html.erb`, criaremos a `navbar` entre as tags `<html>` e `<body>`. Daremos o nome da `brand` de `Loja`, e o link apontado será `root_url`, ou seja, a raiz do nosso projeto.
-
-```console
-<%= nav_bar brand: "Loja", brand_link: root_url %>
-<body>
-    <table class="table table-bordered table-hover">
-        <thead>
-            <tr>
-                <td>Nome</td>
-                <td>Descricao</td>
-                <td>Preço</td>
-                <td>Quantidade</td>
-            </tr>
-        </thead>
-# código omitido
-</body>
+      <% end %>
 ```
 
-### Menu de navegação e organizando as tabelas
 
-Em `index.html.erb` Antes do corpo do HTML `<body>`, criaremos uma `<div>`, que receberá uma classe do Bootstrap chamada `container`, lembrando que precisamos fechar essa `<div>` no final do código.
-
-```console
-<html>
-    <%= nav_bar brand: "Loja", brand_link: root_url %>
-    ´<div class="container">´
-        <body>
-            <table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <td>Nome</td>
-                        <td>Descricao</td>
-                        <td>Preço</td>
-                        <td>Quantidade</td>
-                    </tr>
-                </thead>
-        # código omitido
-        </body>    
-    </div>
-</html>
-```
-Dar destaque na frase **Produtos com menor preço**. Incluiremos uma classe do Bootstrap associada a uma nova `<div>`, a `alert alert-success`, que receberá a função `role="alert"`. Dentro das `<h3>` que envolvem a mensagem, incluiremos a segunda classe `alert-heading`. Por fim, fecharemos a `<div>`.
-
-```console
-<div class="alert alert-success" role="alert">
-    <h3 class="alert-heading">Produto com desconto</h3>
-</div>
-<table class="table table-bordered table-hover">
-#resto do código
-```
-### Cadastrar novos produtos
-Em `App > produtos`, criaremos um novo HTML que chamaremos de `new.html`, e incluiremos nele um formulário de cadastramento de produtos
-
-```console
-<html>
-    <body>
-        <form> 
-            Nome <input type="text" name="nome"><br/>
-            Descrição <textarea name="descricao"></textarea><br/>
-            Preço <input type="number" name="preco" step="0.01"><br/>
-            Quantidade <input type="number" name="quantidade"><br/>
-
-            <button type="submit">Criar</button> 
-        </form>
-    </body>
-</html>
-```
-No navegador, digitaremos a URL `localhost:3000/produtos/new`
-Obteremos uma mensagem de erro do tipo Routing, afinal não configuramos uma rota para sabermos qual controller lidará com essa requisição. Em `config > roubtes.rb`, criaremos uma rota para buscar nosso formulário por meio do método `Get()`
-
-```console
-Rails.application.routes.draw do
-    get "produtos/new",to: "produtos#new" 
-    root to: "produtos#index"
-end
-```
-Dessa forma, será verificado se em `produtos_controller.rb` há algum método com o mesmo nome `new`. Como não é o caso, Então, a view `new.html` é acessada e exibida. Tudo isso é feito por meio do método get(). 
-
-### Salvar no Banco
-Para criarmos de fato os produtos na base de dados, precisaremos de uma nova requisição, mas dessa vez usaremos o método `post()`. Escreveremos uma requisição do tipo `post()` para `produto`, que será atendida também pelo `controller de produtos`, e como estamos querendo criar um novo produto na base, por convenção do Rails essa função é chamada create em `routes.rb`.
-
-```console
-Rails.application.routes.draw do
-    post "produtos", to: "produtos#create"
-    get "produtos/new", to: "produtos#new"
-    root to: "produtos#index"
-end
-```
-
-Em `produtos_controller` criaremos a ação `create`. Para criarmos um produto no Rails console usávamos `produto.create` e passávamos `nome, descrição, preço` e assim por diante. Faremos o mesmo procedimento aqui, mas dessa vez traremos os valores de parâmetro que estão indo para a URL quando preenchemos o formulário. Para tanto, usaremos o termo `params.require`.
-
-Com isso, fazemos uma requisição desses valores, porém precisamos especificar que queremos resgatar os parâmetros relacionados a produto. Em seguida, usaremos o `permit()` para delimitar quais campos devemos acessar, no caso serão `nome, descricao, preco e quantidade`. Todos esses valores serão armazenados em uma variável interna chamada `produto`.
-
-Incluiremos o `redirect_to root_path`, para ser direcionado automaticamente para a pagina principal 
-
-Também criaremos a função `busca`, passaremos o nome a ser pesquisado "#{nome}", usamos os sinais #{} para que possamos referenciar este nome com a variável @produtos, assim como fizemos em index.html.erb para concatenar o que digitamos em uma string, #{produto.nome}.
-
-
-```console
-class ProdutosController < ApplicationController
-
-    def index
-        @produtos = Produto.order(nome: :desc).limit 2
-        @produto_com_menor_preco = Produto.order(:preco).limit 1
-    end
-
-    def create
-        produto = params.require(:produto).permit(:nome, :descricao, :preco, :quantidade)
-        Produto.create produto
-        redirect_to root_path
-    end
-
-    def busca
-    nome = params[:nome]
-    @produtos = "produtos.where", "#{nome}"
-
-    end
-end
-```
-
-Para referenciar o produto no formulário, precisaremos inserir código Ruby em `new.html`. Primeiramente, clicaremos sobre esse arquivo e modificaremos seu nome para `new.html.erb`:
-
-No lugar da tag `<form>`. Como o formulário deve estar visível, escreveremos o sinal `=`, e o termo `form_for` para referenciar o formulário, e seu objetivo é criar um novo produto, portanto usaremos `Produto.new`. No final não precisamos utilizar o sinal `=`, apenas o `end`. 
 
 ```console
 <%= form_for Produto.new do |form| %> 
 ```
 
-Usando `params.require`, como fizemos em `produtos_controller`, precisamos utilizar um padrão para nomear o produto em `new.html.erb`, como por exemplo: `name="produto[nome]"`.
-
-
-Exemplo antes:
-```console
-Nome <input type="text" name="nome"><br/>
-```
-Depois
-```console
-Nome <input type="text" name="produto[nome]"><br/>
-```
-Existe um `helper` do `Rails` que nos auxilia na criação desses campos de texto, sejam elas do tipo text, textarea ou number. Na documentação do Rails encontraremos detalhes sobre cada um desses helpers. Ao buscarmos o termo "text fied", encontraremos um código Rails que gera um HTML bem parecido como o que estamos utilizando em nosso projeto. 
-
-Utilizando ruby e classe do bootstrap 
-`row` Responsável pela criação de uma linha <br>
-`<div>` Que englobará essa classe
-`col-sm-8` Responsável por atribuir um tamanho a linha
-
-```console
-<html>
-    <body>
-        <%= form_for Produto.new do |form| %>
-            <div class="row">
-                <div class="col-sm-8">
-                    <div class="form-group">
-                        <%= form.label :nome %>
-                        <%= form.text_field :nome, class:"form-control" %>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-8">
-                    <div class="form-group">
-                        <%= form.label :descricao %>
-                        <%= form.text_area :descricao, class:"form-control", rows:4 %>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <%= form.label :preco %>
-                        <%= form.number_field :preco, step:0.01, class:"form-control" %>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm-2">
-                    <div class="form-group">
-                        <%= form.label :quantidade %>
-                        <%= form.number_field :quantidade, class:"form-control" %>
-                    </div>
-                </div>
-            </div>
-            
-            <%= form.submit "Criar",class:"btn btn-primary" %>
-            <% end %>
-        <% end %>
-    </body>
-</html>
-```
-Podemos fazer uma pequena refatoração no código de index.html.erb, assim, não precisamos mais utilizar <html> e <body>, pois esse papel já está sendo feito no arquivo application.html.erb. Dessa forma, teremos apenas conteúdos relacionados ao index, o que torna nosso código mais organizado, simplificando a manutenção do mesmo.
-
-```console
-<table class= table table-bordered table-hover">
-    <thead>
-        <tr>
-            <td>Nome</td>
-            <td>Descrição</td>
-            <td>Quantidade</td>
-            <td>Preço</td>
-        </tr>
-    </thead>
-<tbody>
-# código omitido
-</table>
-```
 
 ### Inclusão da Nav bar em todas as páginas e o link Criar produto
 
@@ -567,39 +512,8 @@ def destroy
     redirect_to root_url
 end
 ```
-### Solicitar ao Rails que ele gere os verbos HTTP 
 
-Em `routes.rb` substituiremos:
-```console
-Rails.application.routes.draw do
-  delete "produtos/:id", to: "produtos#destroy", as: :produto
-  post "produtos", to: "produtos#create"
-  get "produtos/new", to: "produtos#new"
-  root to: "produtos#index"
-end
-```
-por:
-```console
-Rails.application.routes.draw do
-    resources :produtos, only: [:new, :create, :destroy]
-    root to: "produtos#index"
 
-end
-```
-Dessa forma, serão criadas as rotas que estabelecemos, como podemos visualizar em localhost:3000/rails/info/routes:
-
-Ao tentarmos acessar nosso projeto novamente por meio do endereço localhost:3000, teremos a mensagem de erro `NameError in Produtos#index`.
-
- O Rails gerou o nome invertido. Para corrigir esse problema, acessaremos `application.html.erb` e substituiremos `produtos_new_path` por `new_produto_path`.
-
-```console
- <body>
-<%= nav_bar brand: "Loja", brand_link: root_url do %>
-    <%= menu_group do %>
-        <%= menu_item "Criar novo produto", new_produto_path %>
-    <% end %>
-<% end %>
-```
 ### Criando busca
 
 O próximo passo é imprimir o resultado da busca na tela. Para isso, criaremos um novo HTML em `app > view > produto`. Esse novo arquivo será chamado de `busca.html.erb`, receberá o encaminhamento da controller e exibirá o conteúdo na tela. O código deste arquivo será muito parecido com aquele estruturado em `index.html.erb`, por isso poderemos aproveitar um pouco do código, e ao longo do curso ajustá-lo para que não fiquemos com informações duplicadas.
