@@ -62,11 +62,11 @@ linha 1 - `get "produtos/busca", to: "produtos#busca", as: :busca_produto` Esta 
 
 linha 2 - `resources :produtos, only: [:new, :create, :destroy]` Esta linha é uma forma abreviada para definir várias rotas relacionadas a recursos de `produtos` de uma só vez. A palavra `resources` é uma função especial no Rails que cria várias rotas padrão `RESTful` para um recurso específico (neste caso, "produtos"). O parâmetro `only: [:new, :create, :destroy]` limita as rotas criadas apenas para as ações `"new", "create" e "destroy"` para o controlador de produtos. Isto significa que as seguintes rotas são criadas:
 
-`GET /produtos/new` (rotas para a ação `new` no controlador de produtos, usada para retornar um formulário para criar um `novo produto`),
-`POST /produtos` (rotas para a ação `create` no controlador de produtos, usada para criar um `novo produto`),
-`DELETE /produtos/:id` (rotas para a ação `destroy` no controlador de produtos, usada para `deletar um produto`).
+`GET /produtos/new` (rotas para a ação `new` no controlador de produtos, usada para retornar um formulário para criar um `novo produto`),<br>
+`POST /produtos` (rotas para a ação `create` no controlador de produtos, usada para criar um `novo produto`),<br>
+`DELETE /produtos/:id` (rotas para a ação `destroy` no controlador de produtos, usada para `deletar um produto`).<br>
 
-linha 3 - root to: "produtos#index": Esta linha define a rota "root" da aplicação, que é a URL que é acessada quando você visita o domínio base da aplicação (por exemplo, www.example.com). Neste caso, a rota "root" está sendo roteada para a ação "index" no controlador de produtos, que geralmente é usado para exibir uma lista de todos os produtos.
+linha 3 - `root to: "produtos#index"`: Esta linha define a rota `root` da aplicação, que é a URL que é acessada quando você visita o domínio base da aplicação (por exemplo, www.example.com). Neste caso, a rota `root` está sendo roteada para a ação `index` no controlador de produtos, que geralmente é usado para exibir uma lista de todos os produtos.
 
 ```console
 Rails.application.routes.draw do
@@ -90,7 +90,7 @@ projeto$ rails generate controller Produtos
 
 No Visual Studio, veremos que a nova pasta produtos é criada dentro de `app`. Ainda, será criada a classe `produtos_controller`, localizada em `app > controllers`. Essa classe herda algumas regras de ApplicationController
 
-Em produtos_controle colocaremos os códigos a seguir
+Em `produtos_controller.rb` colocaremos os códigos a seguir
 
 ```console
   def index
@@ -129,7 +129,7 @@ end
  
 ### Renderizar os elementos HTML comuns em todas as páginas com application.html.erb
 
-Abra views > layouts > application.html.erb  : O application.html.erb é um arquivo de layout padrão no Ruby on Rails. Esse arquivo é responsável por renderizar os elementos HTML comuns em todas as páginas do seu aplicativo, como cabeçalho, rodapé, barra de navegação etc.
+Abra `views > layouts > application.html.erb`  : O application.html.erb é um arquivo de layout padrão no Ruby on Rails. Esse arquivo é responsável por renderizar os elementos HTML comuns em todas as páginas do seu aplicativo, como cabeçalho, rodapé, barra de navegação etc.
 
 ```console
 <!DOCTYPE html>
@@ -164,18 +164,18 @@ Abra views > layouts > application.html.erb  : O application.html.erb é um arqu
   </body>
 </html>
 ```
-`<title>AppFirst</title>`: Define o título da página como "AppFirst".
-`<meta name="viewport" content="width=device-width,initial-scale=1">` : Define as configurações de `viewport` para a página, o que é importante para o design responsivo.
-`<%= csrf_meta_tags %>`: Isso gera tags de metadados para proteção contra falsificação de solicitação entre sites (CSRF).
-`<%= csp_meta_tag %>`: Isso gera uma tag de metadados para a Política de Segurança de Conteúdo (CSP).
-`<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>`: Isso gera um link para o arquivo de folha de estilo CSS `application` e configura-o para ser recarregado se mudar.
-`<%= javascript_importmap_tags %>`: Isso gera tags de script para importação de módulos `JavaScript`.
-`<%= nav_bar brand: "Loja", brand_link: root_url do %>`: Isso cria uma barra de navegação com o nome da marca `Loja` e um link para a URL raiz do aplicativo.
-`<%= menu_group do %> e <%= menu_item "Criar novo produto", new_produto_path %>`: Criam um grupo de itens de menu com um item `Criar novo produto` que leva ao caminho `new_produto_path`.
-`<%= form_tag busca_produto_path, method: :get, class:"navbar-form" do %>`: Cria um formulário que, quando enviado, fará uma solicitação `GET` para `busca_produto_path`. O formulário tem a classe CSS `navbar-form`.
-`<%= text_field_tag :nome, @nome, class:"form-control" %>`: Isso cria um campo de texto com o nome `nome`, o valor `@nome`, e a classe CSS `form-control`.
-`<%= button_to "Buscar", nil, class:"btn btn-default" %>`: Isso cria um botão com o rótulo `Buscar` e a classe CSS `btn btn-default`.
-`<div class="container">`: Cria uma div com a classe CSS `container`.
+`<title>AppFirst</title>`: Define o título da página como "AppFirst".<br>
+`<meta name="viewport" content="width=device-width,initial-scale=1">` : Define as configurações de `viewport` para a página, o que é importante para o design responsivo.<br>
+`<%= csrf_meta_tags %>`: Isso gera tags de metadados para proteção contra falsificação de solicitação entre sites (CSRF).<br>
+`<%= csp_meta_tag %>`: Isso gera uma tag de metadados para a Política de Segurança de Conteúdo (CSP).<br>
+`<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>`: Isso gera um link para o arquivo de folha de estilo CSS `application` e configura-o para ser recarregado se mudar.<br>
+`<%= javascript_importmap_tags %>`: Isso gera tags de script para importação de módulos `JavaScript`.<br>
+`<%= nav_bar brand: "Loja", brand_link: root_url do %>`: Isso cria uma barra de navegação com o nome da marca `Loja` e um link para a URL raiz do aplicativo.<br>
+`<%= menu_group do %> e <%= menu_item "Criar novo produto", new_produto_path %>`: Criam um grupo de itens de menu com um item `Criar novo produto` que leva ao caminho `new_produto_path`.<br>
+`<%= form_tag busca_produto_path, method: :get, class:"navbar-form" do %>`: Cria um formulário que, quando enviado, fará uma solicitação `GET` para `busca_produto_path`. O formulário tem a classe CSS `navbar-form`.<br>
+`<%= text_field_tag :nome, @nome, class:"form-control" %>`: Isso cria um campo de texto com o nome `nome`, o valor `@nome`, e a classe CSS `form-control`.<br>
+`<%= button_to "Buscar", nil, class:"btn btn-default" %>`: Isso cria um botão com o rótulo `Buscar` e a classe CSS `btn btn-default`.<br>
+`<div class="container">`: Cria uma div com a classe CSS `container`.<br>
 
 ### Criação do banco de dados
 
@@ -199,7 +199,7 @@ Resposta: Running via Spring preloader in process 13111
     create    test/fixtures/produto.yml.
 ```
 
-Ao clicarmos na pasta "db > migrate", teremos o arquivo numerogeradopelorails_create_produtos.rb criado:
+Ao clicarmos na pasta `db > migrate`, teremos o arquivo `numerogeradopelorails_create_produtos.rb` criado:
 
 ```console
 class CrateProdutos < ActiveRecord::Migration[5.2]
@@ -261,6 +261,8 @@ sqlite> select * from produtos;
 
 
 ### Criação da view que corresponde à ação index do controller `ProdutosController`
+
+`view > produtos > index.html.erb`
 
 Dentro de uma aplicação Rails, a convenção é ter um arquivo de `view` correspondente para cada ação definida em um `controller`. Nesse caso, quando a ação index do `ProdutosController` é acionada, o Rails vai renderizar a view `index.html.erb` por padrão.
 
@@ -351,13 +353,13 @@ Por exemplo, se o método index do `ProdutosController` define uma variável `@p
 
 `<div class="alert alert-success" role="alert"> e <h3 class="alert-heading">Produto com desconto</h3>`: Essas linhas de código criam um cabeçalho indicando que o próximo produto será um produto com desconto.
 
-`<% @produto_com_desconto.each do |produto| %>`: Este é um loop que itera sobre a variável de instância '@produto_com_desconto'. Para cada produto, ele renderiza um conjunto de células da tabela com o nome, descrição, preço e quantidade do produto.
+`<% @produto_com_desconto.each do |produto| %>`: Este é um loop que itera sobre a variável de instância `@produto_com_desconto`. Para cada produto, ele renderiza um conjunto de células da tabela com o `nome, descrição, preço e quantidade do produto`.
 
 O último bloco é semelhante aos blocos anteriores, mas itera sobre a variável de instância `@baixo_estoque`, que contém os produtos com estoque baixo. Para cada produto, ele renderiza um conjunto de células da tabela com o `nome, descrição, preço e quantidade do produto`.
 
 ### Novo Produto
 
-Criando um novo formulário HTML de novo produto para a entidade produto. O arquivo new.html.erb dentro de view > produtos 
+Criando um novo formulário HTML de novo produto para a entidade produto. O arquivo `new.html.erb` dentro de `view > produtos` 
 
 Será utilizado para renderizar a view correspondente à ação `new` do controller, onde é exibida a página de criação de um novo recurso, neste caso, um `Novo Produto`.
 
@@ -445,74 +447,6 @@ Também colocaremos o campo buscar, Primeiramente criaremos um botão `button-to
 </html>
 ```
 
-### Deletar um produto
-
-Na tabela de produtos que contém `Nome`, `Descrição`, `Preço` e `Quantidade`, será adicionada mais uma coluna que abrigará os botões de `Remover`. Em `index.produtos.erb`, criaremos mais uma `<td>` para este fim. Como não haverá um título para esta coluna, iremos incluir uma outra `<td>` e passaremos a propriedade `cospan="1"`, dessa forma não haverá quebras na estrutura da tabela.
-
-Link que possibilitará a remoção dos produtos, utilizaremos o button_to e importaremos uma classe do CSS chamada btn btn-danger, em seguida passaremos o nome do link `Remover` e o que deve ser removido `produto`, além do método a ser utilizado no protocolo HTTP, `method: delete`. 
-
-Validar a remoção com o termo `data`, inseriremos entre chaves uma mensagem de confirmação, cujo texto será `Tem certeza que deseja remover este produto?`
-
-```console
-<table class="table table-bordered table-hover">
-                <thead>
-                    <tr>
-                        <td>Nome</td>
-                        <td>Descrição</td>
-                        <td>Preço</td>
-                        <td>Quantidade</td>
-                        <td colspan="1">
-                    </tr>
-                </thead>
-                <tbody>
-                <% @produtos.each do |produto| %>
-                    <tr>
-                        <td><%= produto.nome %></td>
-                        <td><%= produto.descricao %></td>
-                        <td><%= produto.preco %></td>
-                        <td><%= produto.quantidade %></td>
-                        <td><%= button_to "Remover", produto, method: :delete,
-                        class:"btn btn-danger" ,
-                        data: {confirm: "Tem certeza que deseja remover o produto #{produto.nome}?"} %></td>
-                        
-                    </tr>
-                    <% end %>
-                </tbody
-# código omitido
-</table>
-```
-
-Em `config > routes.rb`, criaremos uma rota para deletarmos um item da loja. Acionaremos o método `delete()` para coletarmos produtos, e também o `id`, logo, escreveremos `produtos/:id/remover`. 
-
-A requisição será enviada para produtos, e por convenção, quando queremos deletar algo, usamos o termo `#destroy`. Assim, especificaremos que essa linha de código está relacionada `as:` a produto. `delete "produtos/:id/remover", to: "produtos#destroy", as: :produto"`
-
-```console
-Rails.application.routes.draw do
-  delete "produtos/:id/remover", to: "produtos#destroy", as: :produto
-  post "produtos", to: "produtos#create"
-  get "produtos/new", to: "produtos#new"
-  root to: "produtos#index"
-end
-```
-Em `produtos_controller` criaremos a função responsável pela exclusão de um produto, `destroy`. Coletaremos o `id` do produto e o armazenaremos utilizando o termo `params`. Uma vez que o `id` foi coletado, deletaremos o produto associado a ele, portanto escreveremos `Produto.destroy id`.
-
-Uma vez que conseguimos deletar o produto, seremos redirecionados `redirect` para a página principal `root_url`.
-
-```console
-def: create
-    produto = params.require(:produto).permit(:nome,
-    :descricao, :preco, :quantidade)
-    Produto.create produto
-    redirect_to root_url
-end
-
-def destroy
-    id = params[:id]
-    Produto.destroy id
-    redirect_to root_url
-end
-```
-
 
 ### Criando busca
 
@@ -544,37 +478,7 @@ O próximo passo é imprimir o resultado da busca na tela. Para isso, criaremos 
 </table>
 ```
 
-No código de `application.html.erb`, ao pesquisarmos um nome, não há mais nenhum valor `nil`.
 
-```console
-      <div class="form-group">
-        <%= text_field_tag :nome, @nome, class:"form-control"  %>
-        <%= button_to  "Buscar", nil, class:"btn btn-default" %>
-      </div>
-    <% end %>
-  <% end %>
-    <div class="container">
-      <%= yield %>
-    </div>
-```
-
-Substituiremos `nil` por `@nome` para mantermos o conteúdo digitado visível. Em `produtos.controller.rb`, incluiremos o `@` em `#{nome}`, pois trata-se da variável que estamos trazendo da `view`.
-
-```console
-def busca
-    @nome = params[:nome]
-    @produtos = Produto.where "nome like ?",  "%#{@nome}%"
-end
-```
-Assim feito, acessaremos a página raiz e buscaremos o item "Tv" em nosso buscador. Contudo, seremos surpreendidos pela mensagem de erro Rounting `Error - No route matches` `[POST]` `/produtos/busca`. Quando criamos o formulário em `application.html.erb`, não especificamos o método utilizado no botão, logo, escreveremos `method: :get`.
-
-```console
-<%= form_tag busca_produto_path, method: :get, class:"navbar-form navbar-right" do %>
-     <div class="form-group">
-       <%= text_field_tag :nome, @nome, class:"form-control"  %>
-       <%= button_to  "Buscar", nil, class:"btn btn-default" %>
-     </div>
-```
 
 
 
