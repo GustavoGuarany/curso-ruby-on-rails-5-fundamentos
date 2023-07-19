@@ -311,5 +311,358 @@ Dar destaque na frase **Produtos com menor preço**. Incluiremos uma classe do B
 <table class="table table-bordered table-hover">
 #resto do código
 ```
+### Cadastrar novos produtos
+Em `App > produtos`, criaremos um novo HTML que chamaremos de `new.html`, e incluiremos nele um formulário de cadastramento de produtos
+
+```console
+<html>
+    <body>
+        <form> 
+            Nome <input type="text" name="nome"><br/>
+            Descrição <textarea name="descricao"></textarea><br/>
+            Preço <input type="number" name="preco" step="0.01"><br/>
+            Quantidade <input type="number" name="quantidade"><br/>
+
+            <button type="submit">Criar</button> 
+        </form>
+    </body>
+</html>
+```
+No navegador, digitaremos a URL `localhost:3000/produtos/new`
+Obteremos uma mensagem de erro do tipo Routing, afinal não configuramos uma rota para sabermos qual controller lidará com essa requisição. Em `config > roubtes.rb`, criaremos uma rota para buscar nosso formulário por meio do método `Get()`
+
+```console
+Rails.application.routes.draw do
+    get "produtos/new",to: "produtos#new" 
+    root to: "produtos#index"
+end
+```
+Dessa forma, será verificado se em `produtos_controller.rb` há algum método com o mesmo nome `new`. Como não é o caso, Então, a view `new.html` é acessada e exibida. Tudo isso é feito por meio do método get(). 
+
+### Salvar no Banco
+Para criarmos de fato os produtos na base de dados, precisaremos de uma nova requisição, mas dessa vez usaremos o método `post()`. Escreveremos uma requisição do tipo `post()` para `produto`, que será atendida também pelo `controller de produtos`, e como estamos querendo criar um novo produto na base, por convenção do Rails essa função é chamada create em `routes.rb`.
+
+```console
+Rails.application.routes.draw do
+    post "produtos", to: "produtos#create"
+    get "produtos/new", to: "produtos#new"
+    root to: "produtos#index"
+end
+```
+
+Em `produtos_controller` criaremos a ação `create`. Para criarmos um produto no Rails console usávamos `produto.create` e passávamos `nome, descrição, preço` e assim por diante. Faremos o mesmo procedimento aqui, mas dessa vez traremos os valores de parâmetro que estão indo para a URL quando preenchemos o formulário. Para tanto, usaremos o termo `params.require`.
+
+Com isso, fazemos uma requisição desses valores, porém precisamos especificar que queremos resgatar os parâmetros relacionados a produto. Em seguida, usaremos o `permit()` para delimitar quais campos devemos acessar, no caso serão `nome, descricao, preco e quantidade`. Todos esses valores serão armazenados em uma variável interna chamada `produto`.
+
+Incluiremos o `redirect_to root_path`, para ser direcionado automaticamente para a pagina principal 
+
+Também criaremos a função `busca`, passaremos o nome a ser pesquisado "#{nome}", usamos os sinais #{} para que possamos referenciar este nome com a variável @produtos, assim como fizemos em index.html.erb para concatenar o que digitamos em uma string, #{produto.nome}.
+
+
+```console
+class ProdutosController < ApplicationController
+
+    def index
+        @produtos = Produto.order(nome: :desc).limit 2
+        @produto_com_menor_preco = Produto.order(:preco).limit 1
+    end
+
+    def create
+        produto = params.require(:produto).permit(:nome, :descricao, :preco, :quantidade)
+        Produto.create produto
+        redirect_to root_path
+    end
+
+    def busca
+    nome = params[:nome]
+    @produtos = "produtos.where", "#{nome}"
+
+    end
+end
+```
+
+Para referenciar o produto no formulário, precisaremos inserir código Ruby em `new.html`. Primeiramente, clicaremos sobre esse arquivo e modificaremos seu nome para `new.html.erb`:
+
+No lugar da tag `<form>`. Como o formulário deve estar visível, escreveremos o sinal `=`, e o termo `form_for` para referenciar o formulário, e seu objetivo é criar um novo produto, portanto usaremos `Produto.new`. No final não precisamos utilizar o sinal `=`, apenas o `end`. 
+
+```console
+<%= form_for Produto.new do |form| %> 
+```
+
+Usando `params.require`, como fizemos em `produtos_controller`, precisamos utilizar um padrão para nomear o produto em `new.html.erb`, como por exemplo: `name="produto[nome]"`.
+
+
+Exemplo antes:
+```console
+Nome <input type="text" name="nome"><br/>
+```
+Depois
+```console
+Nome <input type="text" name="produto[nome]"><br/>
+```
+Existe um `helper` do `Rails` que nos auxilia na criação desses campos de texto, sejam elas do tipo text, textarea ou number. Na documentação do Rails encontraremos detalhes sobre cada um desses helpers. Ao buscarmos o termo "text fied", encontraremos um código Rails que gera um HTML bem parecido como o que estamos utilizando em nosso projeto. 
+
+Utilizando ruby e classe do bootstrap 
+`row` Responsável pela criação de uma linha <br>
+`<div>` Que englobará essa classe
+`col-sm-8` Responsável por atribuir um tamanho a linha
+
+```console
+<html>
+    <body>
+        <%= form_for Produto.new do |form| %>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <%= form.label :nome %>
+                        <%= form.text_field :nome, class:"form-control" %>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-8">
+                    <div class="form-group">
+                        <%= form.label :descricao %>
+                        <%= form.text_area :descricao, class:"form-control", rows:4 %>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <%= form.label :preco %>
+                        <%= form.number_field :preco, step:0.01, class:"form-control" %>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <%= form.label :quantidade %>
+                        <%= form.number_field :quantidade, class:"form-control" %>
+                    </div>
+                </div>
+            </div>
+            
+            <%= form.submit "Criar",class:"btn btn-primary" %>
+            <% end %>
+        <% end %>
+    </body>
+</html>
+```
+Podemos fazer uma pequena refatoração no código de index.html.erb, assim, não precisamos mais utilizar <html> e <body>, pois esse papel já está sendo feito no arquivo application.html.erb. Dessa forma, teremos apenas conteúdos relacionados ao index, o que torna nosso código mais organizado, simplificando a manutenção do mesmo.
+
+```console
+<table class= table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td>Nome</td>
+            <td>Descrição</td>
+            <td>Quantidade</td>
+            <td>Preço</td>
+        </tr>
+    </thead>
+<tbody>
+# código omitido
+</table>
+```
+
+### Inclusão da Nav bar em todas as páginas e o link Criar produto
+
+Clicaremos sobre o arquivo "views > layouts > application.html.erb", em que há alguns elementos HTML básicos, importações CSS e JavaScript. Esses conteúdos podem ser compartilhados com outras páginas.
+
+Como exemplo, em <body> podemos incluir o código de navbar, e a classe container, pois existe mais abaixo um código yield que irá incluir a informação em todas as páginas do projeto.
+
+Também colocaremos o campo buscar, Primeiramente criaremos um botão `button-to`, como o texto `Buscar`, e o segundo parâmetro com que definiremos o que deve ser enviado com este botão, neste caso, uma tabela vazia nil. Para melhorar o especto visual do botão adicionaremos a classe `btn btn-default`, do Bootstrap: 
+
+```console
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Loja</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  </head>
+
+  <body>
+    <%= nav_bar brand: "Loja", brand_link: root_url do %>
+        <%= menu_group do %>
+        <%= menu_item "Criar novo produto", produtos_new_path %>
+        <% end %>
+    <% end %>
+    <div class="container">
+    <%= yield %>
+    </div> 
+  </body>
+</html>
+```
+
+### Deletar um produto
+
+Na tabela de produtos que contém `Nome`, `Descrição`, `Preço` e `Quantidade`, será adicionada mais uma coluna que abrigará os botões de `Remover`. Em `index.produtos.erb`, criaremos mais uma `<td>` para este fim. Como não haverá um título para esta coluna, iremos incluir uma outra `<td>` e passaremos a propriedade `cospan="1"`, dessa forma não haverá quebras na estrutura da tabela.
+
+Link que possibilitará a remoção dos produtos, utilizaremos o button_to e importaremos uma classe do CSS chamada btn btn-danger, em seguida passaremos o nome do link `Remover` e o que deve ser removido `produto`, além do método a ser utilizado no protocolo HTTP, `method: delete`. 
+
+Validar a remoção com o termo `data`, inseriremos entre chaves uma mensagem de confirmação, cujo texto será `Tem certeza que deseja remover este produto?`
+
+```console
+<table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <td>Nome</td>
+                        <td>Descrição</td>
+                        <td>Preço</td>
+                        <td>Quantidade</td>
+                        <td colspan="1">
+                    </tr>
+                </thead>
+                <tbody>
+                <% @produtos.each do |produto| %>
+                    <tr>
+                        <td><%= produto.nome %></td>
+                        <td><%= produto.descricao %></td>
+                        <td><%= produto.preco %></td>
+                        <td><%= produto.quantidade %></td>
+                        <td><%= button_to "Remover", produto, method: :delete,
+                        class:"btn btn-danger" ,
+                        data: {confirm: "Tem certeza que deseja remover o produto #{produto.nome}?"} %></td>
+                        
+                    </tr>
+                    <% end %>
+                </tbody
+# código omitido
+</table>
+```
+
+Em `config > routes.rb`, criaremos uma rota para deletarmos um item da loja. Acionaremos o método `delete()` para coletarmos produtos, e também o `id`, logo, escreveremos `produtos/:id/remover`. 
+
+A requisição será enviada para produtos, e por convenção, quando queremos deletar algo, usamos o termo `#destroy`. Assim, especificaremos que essa linha de código está relacionada `as:` a produto. `delete "produtos/:id/remover", to: "produtos#destroy", as: :produto"`
+
+```console
+Rails.application.routes.draw do
+  delete "produtos/:id/remover", to: "produtos#destroy", as: :produto
+  post "produtos", to: "produtos#create"
+  get "produtos/new", to: "produtos#new"
+  root to: "produtos#index"
+end
+```
+Em `produtos_controller` criaremos a função responsável pela exclusão de um produto, `destroy`. Coletaremos o `id` do produto e o armazenaremos utilizando o termo `params`. Uma vez que o `id` foi coletado, deletaremos o produto associado a ele, portanto escreveremos `Produto.destroy id`.
+
+Uma vez que conseguimos deletar o produto, seremos redirecionados `redirect` para a página principal `root_url`.
+
+```console
+def: create
+    produto = params.require(:produto).permit(:nome,
+    :descricao, :preco, :quantidade)
+    Produto.create produto
+    redirect_to root_url
+end
+
+def destroy
+    id = params[:id]
+    Produto.destroy id
+    redirect_to root_url
+end
+```
+### Solicitar ao Rails que ele gere os verbos HTTP 
+
+Em `routes.rb` substituiremos:
+```console
+Rails.application.routes.draw do
+  delete "produtos/:id", to: "produtos#destroy", as: :produto
+  post "produtos", to: "produtos#create"
+  get "produtos/new", to: "produtos#new"
+  root to: "produtos#index"
+end
+```
+por:
+```console
+Rails.application.routes.draw do
+    resources :produtos, only: [:new, :create, :destroy]
+    root to: "produtos#index"
+
+end
+```
+Dessa forma, serão criadas as rotas que estabelecemos, como podemos visualizar em localhost:3000/rails/info/routes:
+
+Ao tentarmos acessar nosso projeto novamente por meio do endereço localhost:3000, teremos a mensagem de erro `NameError in Produtos#index`.
+
+ O Rails gerou o nome invertido. Para corrigir esse problema, acessaremos `application.html.erb` e substituiremos `produtos_new_path` por `new_produto_path`.
+
+```console
+ <body>
+<%= nav_bar brand: "Loja", brand_link: root_url do %>
+    <%= menu_group do %>
+        <%= menu_item "Criar novo produto", new_produto_path %>
+    <% end %>
+<% end %>
+```
+### Criando busca
+
+O próximo passo é imprimir o resultado da busca na tela. Para isso, criaremos um novo HTML em `app > view > produto`. Esse novo arquivo será chamado de `busca.html.erb`, receberá o encaminhamento da controller e exibirá o conteúdo na tela. O código deste arquivo será muito parecido com aquele estruturado em `index.html.erb`, por isso poderemos aproveitar um pouco do código, e ao longo do curso ajustá-lo para que não fiquemos com informações duplicadas.
+
+```console
+<table class="table table-bordered table-hover">
+    <thead>
+        <tr>
+            <td>Nome</td>
+            <td>Descrição</td>
+            <td>Preço</td>
+            <td>Quantidade</td>
+            <td colspan="1">
+        </tr>
+    </thead>
+    <tbody>
+    <% @produtos.each do |produto| %>
+        <tr>
+            <td><%= produto.nome %></td>
+            <td><%= produto.descricao %></td>
+            <td><%= produto.preco %></td>
+            <td><%= produto.quantidade %></td>
+            <td><%= button_to "Remover", produto, method: :delete, class:"btn btn-danger",
+            data: {confirm: "Tem certeza que deseja remover o produto #{produto.nome}?"}  %></td>
+        </tr>
+        <% end %>
+    </tbody>
+</table>
+```
+
+No código de `application.html.erb`, ao pesquisarmos um nome, não há mais nenhum valor `nil`.
+
+```console
+      <div class="form-group">
+        <%= text_field_tag :nome, @nome, class:"form-control"  %>
+        <%= button_to  "Buscar", nil, class:"btn btn-default" %>
+      </div>
+    <% end %>
+  <% end %>
+    <div class="container">
+      <%= yield %>
+    </div>
+```
+
+Substituiremos `nil` por `@nome` para mantermos o conteúdo digitado visível. Em `produtos.controller.rb`, incluiremos o `@` em `#{nome}`, pois trata-se da variável que estamos trazendo da `view`.
+
+```console
+def busca
+    @nome = params[:nome]
+    @produtos = Produto.where "nome like ?",  "%#{@nome}%"
+end
+```
+Assim feito, acessaremos a página raiz e buscaremos o item "Tv" em nosso buscador. Contudo, seremos surpreendidos pela mensagem de erro Rounting `Error - No route matches` `[POST]` `/produtos/busca`. Quando criamos o formulário em `application.html.erb`, não especificamos o método utilizado no botão, logo, escreveremos `method: :get`.
+
+```console
+<%= form_tag busca_produto_path, method: :get, class:"navbar-form navbar-right" do %>
+     <div class="form-group">
+       <%= text_field_tag :nome, @nome, class:"form-control"  %>
+       <%= button_to  "Buscar", nil, class:"btn btn-default" %>
+     </div>
+```
+
+
+
 
 
