@@ -164,18 +164,18 @@ Abra `views > layouts > application.html.erb`  : O application.html.erb é um ar
   </body>
 </html>
 ```
-`<title>AppFirst</title>`: Define o título da página como "AppFirst".<br>
-`<meta name="viewport" content="width=device-width,initial-scale=1">` : Define as configurações de `viewport` para a página, o que é importante para o design responsivo.<br>
-`<%= csrf_meta_tags %>`: Isso gera tags de metadados para proteção contra falsificação de solicitação entre sites (CSRF).<br>
-`<%= csp_meta_tag %>`: Isso gera uma tag de metadados para a Política de Segurança de Conteúdo (CSP).<br>
-`<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>`: Isso gera um link para o arquivo de folha de estilo CSS `application` e configura-o para ser recarregado se mudar.<br>
-`<%= javascript_importmap_tags %>`: Isso gera tags de script para importação de módulos `JavaScript`.<br>
-`<%= nav_bar brand: "Loja", brand_link: root_url do %>`: Isso cria uma barra de navegação com o nome da marca `Loja` e um link para a URL raiz do aplicativo.<br>
-`<%= menu_group do %> e <%= menu_item "Criar novo produto", new_produto_path %>`: Criam um grupo de itens de menu com um item `Criar novo produto` que leva ao caminho `new_produto_path`.<br>
-`<%= form_tag busca_produto_path, method: :get, class:"navbar-form" do %>`: Cria um formulário que, quando enviado, fará uma solicitação `GET` para `busca_produto_path`. O formulário tem a classe CSS `navbar-form`.<br>
-`<%= text_field_tag :nome, @nome, class:"form-control" %>`: Isso cria um campo de texto com o nome `nome`, o valor `@nome`, e a classe CSS `form-control`.<br>
+`<title>AppFirst</title>`: Define o título da página como "AppFirst".<br><br>
+`<meta name="viewport" content="width=device-width,initial-scale=1">` : Define as configurações de `viewport` para a página, o que é importante para o design responsivo.<br><br>
+`<%= csrf_meta_tags %>`: Isso gera tags de metadados para proteção contra falsificação de solicitação entre sites (CSRF).<br><br>
+`<%= csp_meta_tag %>`: Isso gera uma tag de metadados para a Política de Segurança de Conteúdo (CSP).<br><br>
+`<%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>`: Isso gera um link para o arquivo de folha de estilo CSS `application` e configura-o para ser recarregado se mudar.<br><br>
+`<%= javascript_importmap_tags %>`: Isso gera tags de script para importação de módulos `JavaScript`.<br><br>
+`<%= nav_bar brand: "Loja", brand_link: root_url do %>`: Isso cria uma barra de navegação com o nome da marca `Loja` e um link para a URL raiz do aplicativo.<br><br>
+`<%= menu_group do %> e <%= menu_item "Criar novo produto", new_produto_path %>`: Criam um grupo de itens de menu com um item `Criar novo produto` que leva ao caminho `new_produto_path`.<br><br>
+`<%= form_tag busca_produto_path, method: :get, class:"navbar-form" do %>`: Cria um formulário que, quando enviado, fará uma solicitação `GET` para `busca_produto_path`. O formulário tem a classe CSS `navbar-form`.<br><br>
+`<%= text_field_tag :nome, @nome, class:"form-control" %>`: Isso cria um campo de texto com o nome `nome`, o valor `@nome`, e a classe CSS `form-control`.<br><br>
 `<%= button_to "Buscar", nil, class:"btn btn-default" %>`: Isso cria um botão com o rótulo `Buscar` e a classe CSS `btn btn-default`.<br>
-`<div class="container">`: Cria uma div com a classe CSS `container`.<br>
+`<div class="container">`: Cria uma div com a classe CSS `container`.<br><br>
 
 ### Criação do banco de dados
 
